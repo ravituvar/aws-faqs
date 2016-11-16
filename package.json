@@ -1,0 +1,30 @@
+{
+  "name": "aws-faqs",
+  "version": "1.0.0",
+  "description": "crawler AWS FAQs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tomowang/aws-faqs.git"
+  },
+  "keywords": [
+    "aws",
+    "faqs"
+  ],
+  "author": "Tomo Wang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tomowang/aws-faqs/issues"
+  },
+  "homepage": "https://github.com/tomowang/aws-faqs#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "async": "^2.1.2",
+    "cheerio": "^0.22.0",
+    "lodash": "^4.17.1",
+    "request": "^2.78.0"
+  }
+}
