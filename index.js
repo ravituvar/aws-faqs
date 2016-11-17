@@ -1,6 +1,7 @@
 'use strict';
 
 const fs = require('fs');
+const path = require('path');
 const url = require('url');
 const request = require('request');
 const async = require('async');
@@ -56,13 +57,39 @@ getPage(baseUrl, function ($) {
     html = beautify_html(html, {
       indent_size: 2
     });
-
-    fs.writeFile(`index.html`, html, function (err) {
-      if (err) console.error(err);
-      else console.log('done!');
+    const $ = cheerio.load(html);
+    async.mapLimit($('img').map(function () {return $(this).attr('src');}), CONCURRENCY, fetchImg, function () {
+      console.log('fetch images done!');
+      $('img').each(function () {
+        let $this = $(this);
+        let filename = path.basename($this.attr('src'));
+        $this.attr('src', `images/${filename}`);
+      });
+      fs.writeFile(`index.html`, $.html(), function (err) {
+        if (err) console.error(err);
+        else console.log('done!');
+      });
     });
   });
 });
+
+function fetchImg (src, done) {
+  src = url.resolve(baseUrl, src);
+  let filename = path.basename(src);
+  let filePath = `images/${filename}`;
+  try {
+    fs.accessSync(filePath, fs.F_OK);
+    console.log('image already exists: ' + filePath);
+    done(null);
+  } catch (e) {
+    console.log('fetch image: ' + src);
+    let stream = request(src).pipe(fs.createWriteStream(filePath));
+    stream.on('finish', function () {
+      console.log('finish fetch image: ' + src);
+      done(null);
+    });
+  }
+}
 
 function fetchFAQ (section, done) {
   getPage(section.url, function ($) {
@@ -91,8 +118,21 @@ function fetchFAQ (section, done) {
     }
 
     $('.parsys > .columnbuilder .parsys.col1 ul').closest('.section').remove(); // remove in-page toc
-    if ($('.parsys > .columnbuilder .parsys.col1 > :not(.columnbuilder)').length > 0) {
-      content += $('.parsys > .columnbuilder .parsys.col1').html();
+    if ($('.parsys > .columnbuilder .parsys.col1 > :not(.columnbuilder)').length > 0 ) {
+      if (name !== 'windows') {
+        content += $('.parsys > .columnbuilder .parsys.col1').html();
+      } else {
+        $('.content-modal').remove(); // remove popup image modal
+        // fix figures for windows
+        $('.parsys > .columnbuilder .parsys.col1 > .aws-comp').each(function () {
+          let $this = $(this);
+          let column = $this.closest('.columnbuilder');
+          let prev = column.prev();
+          column.remove();
+          $('figure', $this).html($('div.image', $this));
+          prev.after($this);
+        });
+      }
     }
     $('.parsys > .columnbuilder').remove();
     if (name === 'windows') {

@@ -3,5 +3,5 @@ Simple node script to crawler [AWS FAQs](https://aws.amazon.com/faqs/) and gener
 
 ## TODO
 + [X] CSS
-+ [ ] crawl images
++ [X] crawl images
 + [ ] convert to pdf
