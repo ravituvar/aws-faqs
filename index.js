@@ -6,6 +6,7 @@ const request = require('request');
 const async = require('async');
 const _ = require('lodash');
 const cheerio = require('cheerio');
+const beautify_html = require('js-beautify').html;
 
 const baseUrl = 'https://aws.amazon.com/faqs/';
 const CONCURRENCY = 10;
@@ -51,9 +52,14 @@ getPage(baseUrl, function ($) {
     const content = _.join(_.map(faqs, function (f) {
       return `<h1 id="section-${f.name}">${f.section}</h1>${f.content}`;
     }), '');
-    fs.writeFile(`index.html`, `<!DOCTYPE html><html><head></head><body><nav>${toc}</nav>${content}</body></html>`, function (err) {
+    let html = `<!DOCTYPE html><html><head><link href="style.css" rel="stylesheet"></head><body><nav>${toc}</nav>${content}</body></html>`;
+    html = beautify_html(html, {
+      indent_size: 2
+    });
+
+    fs.writeFile(`index.html`, html, function (err) {
       if (err) console.error(err);
-      console.log('done!');
+      else console.log('done!');
     });
   });
 });
@@ -74,17 +80,30 @@ function fetchFAQ (section, done) {
 
     $('.parsys > .mbox').remove();
     $('script').remove(); // remove js
-    if ($('.parsys > .columnbuilder .parsys.col1 > :not(.columnbuilder)')) {
+    if (_.includes(['s3', 'efs', 'glacier', 'elasticache', 'route53'], name)) {
+      $('.parsys > .columnbuilder').remove();
+    } else if (name === 'elasticache') {
+      $('.parsys > .title-wrapper').first().remove();
+      $('.parsys > .aws-text-box').first().remove();
+    } else if (name === 'premiumsupport') {
+      $('.parsys > .divider').first().remove();
+      $('.parsys > .aws-text-box').first().remove(); // in-page toc
+    }
+
+    $('.parsys > .columnbuilder .parsys.col1 ul').closest('.section').remove(); // remove in-page toc
+    if ($('.parsys > .columnbuilder .parsys.col1 > :not(.columnbuilder)').length > 0) {
       content += $('.parsys > .columnbuilder .parsys.col1').html();
     }
     $('.parsys > .columnbuilder').remove();
-
     if (name === 'windows') {
       $('main > section .parsys > .divider').first().prevAll().remove(); // remove in-page toc
     }
 
-    $('a[href="#top"]').closest('.aws-text-box').remove(); // remove back to top
+    if (_.includes(['storagegateway', 'emr', 'machine-learning', 'api-gateway'], name)) { // special handle `back to top` for storage gateway
+      $('.parsys > .aws-text-box > div > p:last-child').remove();
+    }
 
+    $('a[href="#top"]').closest('.aws-text-box').remove(); // remove back to top
     if (name === 'console') { // tabs
       $('.par.parsys > .title-wrapper + .aws-text-box').remove(); // remove toc in each tab
       content += $('.tab-pane .par.parsys').map(function () {
@@ -95,9 +114,10 @@ function fetchFAQ (section, done) {
     } else if (name === 'lumberyard' || name === 'gamelift') { // Game Development
       content += $('main > section .content > .row-builder:first-child .parsys').html();
     } else if (name === 'quicksight') {
+      $('.back-to-top').remove();
       content += $('.central-column > .col-text').html();
-    } else if (name === 'ses') {
-      content += $('.parsys.content .parsys.col1').html();
+    // } else if (name === 'ses') {
+    //   content += $('.parsys.content .parsys.col1').html();
     } else {
       content += $('main > section > .parsys').html();
     }
@@ -125,7 +145,7 @@ function genToC (faqs) {
       const title = _.trim($(titleSelector, this).html());
       return `<li><a href="#${id}">${title}</a></li>`;
     }).get().join('');
-    return `<li><a href="#section-${name}">${faq.section}</a><ul>${links}</ul></li>`;
+    return `<li><h1><a href="#section-${name}">${faq.section}</a></h1><ul>${links}</ul></li>`;
   }), '');
   return `<ul>${toc}</ul>`;
 }

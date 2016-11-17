@@ -1,0 +1,157 @@
+body {
+  font-family: HelveticaNeue,Helvetica,Helvetica,Arial,sans-serif;
+  font-size: 1em;
+  line-height: 1.6em;
+  color: #333;
+  /*margin: 0;*/
+  position: relative;
+  text-align: left;
+}
+
+*, *:before, *:after {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+ul, ol {
+  padding: 0;
+  margin: 0 0 15px 30px;
+}
+
+nav > ul, nav > ol {
+  list-style: none;
+}
+
+h1, h2, h3 {
+  font-weight: 300;
+}
+
+h2 {
+  font-size: 2em;
+  color: #1F3D5C;
+}
+
+h1 {
+  font-size: 2.4em;
+  color: #e47911;
+}
+
+.title h1 a, .title h2 a, .title h3 a, .title h4 a, .title h5 a, .title h6 a {
+  color: inherit;
+}
+
+a {
+  color: #007eb9;
+  text-decoration: none;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid #ddd;
+  margin: 0 0 30px;
+  background-color: transparent;
+  display: block;
+  height: 1px;
+  line-height: 1.6em;
+}
+
+p {
+  margin: 0 0 .8em;
+}
+
+.title.row {
+  margin-bottom: 15px;
+}
+.text, .text-box, .aws-text-box {
+  margin-bottom: 25px;
+}
+.aws-text-box ul {
+  margin-left: 18px;
+}
+.aws-text-box li {
+  margin: 0 0 15px 0px;
+}
+
+/* figure */
+.offset-nopad {
+  margin-bottom: 0 !important;
+}
+.image-box {
+  margin-bottom: 30px;
+  text-align: center;
+}
+.image-box .image {
+  overflow: visible;
+  line-height: 0;
+}
+.image-box .image img {
+  display: inline;
+}
+img, object, embed {
+  max-width: 100%;
+  height: auto;
+}
+img {
+  border: 0;
+  width: auto;
+  height: auto;
+}
+figure {
+  margin: 0;
+  display: block;
+}
+
+/* table */
+.aws-table {
+  margin-bottom: 30px;
+  overflow: auto
+}
+.aws-table td {
+  text-align: center
+}
+.aws-table td:first-child {
+  text-align: left
+}
+.aws-table table {
+  width: 100%
+}
+.aws-table table tbody {
+  border-bottom: 1px solid #ddd
+}
+.aws-table table tbody>tr:nth-child(even)>td,.aws-table table tbody>tr:nth-child(even)>th {
+  background-color: #f7f7f7
+}
+.aws-table table tfoot,.aws-table table {
+  border-bottom: 1px solid #ddd;
+  font-size: .86em
+}
+.aws-table table td {
+  padding: 8px
+}
+.aws-table table th {
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+  padding: 15px 0 8px
+}
+
+/* code */
+pre {
+  display: block;
+  padding: 15px;
+  margin: 0 0 30px;
+  font-size: 1em;
+  line-height: 1.6em;
+  word-break: break-all;
+  word-wrap: break-word;
+  white-space: pre;
+  white-space: pre-wrap;
+  background-color: #f7f7f7;
+  border: 1px solid #ddd;
+}
+code, kbd, pre, samp {
+  font-family: Consolas,Andale Mono WT,Andale Mono,Lucida Console,Lucida Sans Typewriter,DejaVu Sans Mono,Bitstream Vera Sans Mono,Liberation Mono,Nimbus Mono L,Monaco,Courier New,Courier,monospace;
+}
+.aws-code p {
+  margin-bottom: -23px;
+}

@@ -4,6 +4,7 @@
   "description": "crawler AWS FAQs",
   "main": "index.js",
   "scripts": {
+    "build": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,7 +21,9 @@
     "url": "https://github.com/tomowang/aws-faqs/issues"
   },
   "homepage": "https://github.com/tomowang/aws-faqs#readme",
-  "dependencies": {},
+  "dependencies": {
+    "js-beautify": "^1.6.4"
+  },
   "devDependencies": {
     "async": "^2.1.2",
     "cheerio": "^0.22.0",
